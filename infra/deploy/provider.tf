@@ -13,7 +13,7 @@ backend "s3" {
   workspace_key_prefix = "tf-state-deploy-env"
   region         = "eu-west-2"
   encrypt        = true  
-  dynamodb_table = "receipe-app-lock"
+  dynamodb_table = "recipe-app-lock"
   } 
 }
 
