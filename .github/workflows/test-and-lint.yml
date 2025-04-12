@@ -38,13 +38,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Terraform Init
+      - name: Terraform lint
         run: |
           cd infra/ 
           docker compose run --rm terraform -chdir=deploy/ terraform init -backend=false
           docker compose run --rm terraform -chdir=setup/ terraform init -backend=false
-      - name: Terraform Format and Validate
-        run: |
           docker compose run --rm terraform -chdir=deploy/ terraform validate
           docker compose run --rm terraform -chdir=deploy/ terraform fmt -check
           docker compose run --rm terraform -chdir=setup/ terraform validate
