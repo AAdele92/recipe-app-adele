@@ -8,10 +8,13 @@ terraform {
   }
 
 backend "s3" {
-  bucket         = var.bucket_name
-  key            = "terraform.tfstate"
+  bucket         = "recipe-app-3-tfstate"
+  key            = "tf.tfstate-deploy"
+  workspace_key_prefix = "tf-state-deploy-env"
+  region         = "eu-west-2"
   encrypt        = true  
-  dynamodb_table = var.dynamodb_table_name
+  dynamodb_table = "receipe-app-lock"
+  
   } 
 }
 
