@@ -51,4 +51,4 @@ jobs:
           docker compose run --rm terraform -chdir=deploy/ fmt -check || echo "Deploy fmt check failed"
           docker compose run --rm terraform -chdir=setup/ init -backend=false
           docker compose run --rm terraform -chdir=setup/ validate || echo "Setup validation failed"
-          docker compose run --rm terraform -chdir=setup/ fmt -check || echo "Setup fmt check failed"
+          docker compose run --rm terraform -chdir=setup/ fmt -check || echo "Setup fmt check failedd"
