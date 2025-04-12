@@ -13,7 +13,7 @@ variable "bucket_name" {
 variable "dynamodb_table_name" {
   description = "The name of the DynamoDB table for state locking"
   type        = string
-  default     = "receipe-app-lock"
+  default     = "recipe-app-lock"
 }
 
 variable "project_name" {
