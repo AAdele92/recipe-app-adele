@@ -38,13 +38,13 @@ variable "region" {
 variable "kms_key_id" {
   description = "The ID of the KMS key for S3 encryption"
   type        = string
-  default     = "receipe-app-kms-key"
+  default     = "recipe-app-kms-key"
 }
 
 variable "dynamodb_table_name" {
   description = "The name of the DynamoDB table for state locking"
   type        = string
-  default     = "receipe-app-lock"
+  default     = "recipe-app-lock"
 }
 
 variable "ecr_repository_name" {
