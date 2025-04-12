@@ -45,7 +45,8 @@ jobs:
           docker compose run --rm terraform -chdir=setup/ terraform init -backend=false
       - name: Terraform Format and Validate
         run: |
-          docker compose run --rm terraform -chdir=deploy/ terraform fmt -check
           docker compose run --rm terraform -chdir=deploy/ terraform validate
-          docker compose run --rm terraform -chdir=setup/ terraform fmt -check
+          docker compose run --rm terraform -chdir=deploy/ terraform fmt -check
           docker compose run --rm terraform -chdir=setup/ terraform validate
+          docker compose run --rm terraform -chdir=setup/ terraform fmt -check
+          
