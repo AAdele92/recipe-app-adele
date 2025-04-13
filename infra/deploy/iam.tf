@@ -86,7 +86,9 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
+    resources = [
+      "arn:aws:ecr:eu-west-2:227506592851:repository/*"
+    ]
   }
 
   statement {
@@ -102,14 +104,33 @@ data "aws_iam_policy_document" "ecr" {
   }
 }
 
+data "aws_iam_policy_document" "iam" {
+  statement {
+    effect = "Allow"
+    actions = ["iam:CreateUser"]
+    resources = ["arn:aws:iam::227506592851:user/recipe-app-api-cd"]
+  }
+}
+
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
   description = "Allow user to manage ECR resources"
   policy      = data.aws_iam_policy_document.ecr.json
 }
 
+resource "aws_iam_policy" "iam" {
+  name        = "${aws_iam_user.cd.name}-iam"
+  description = "Allow user to create IAM users"
+  policy      = data.aws_iam_policy_document.iam.json
+}
+
 resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
+}
+
+resource "aws_iam_user_policy_attachment" "iam" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.iam.arn
 }
 #################
