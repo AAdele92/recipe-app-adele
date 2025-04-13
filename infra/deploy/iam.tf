@@ -11,7 +11,7 @@ resource "aws_iam_access_key" "cd" {
 }
 
 #########################################################
-# Policy for Teraform backend to S3 and DynamoDB access #
+# Policy for Terraform backend to S3 and DynamoDB access #
 #########################################################
 
 data "aws_iam_policy_document" "tf_backend" {
@@ -25,11 +25,12 @@ data "aws_iam_policy_document" "tf_backend" {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
-      
-      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
+      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy",
+      "arn:aws:s3:::${var.bucket_name}/tf-tfstate-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
+
   statement {
     effect = "Allow"
     actions = [
@@ -39,18 +40,6 @@ data "aws_iam_policy_document" "tf_backend" {
       "dynamodb:DeleteItem"
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-    resources = ["arn:aws:s3:::recipe-app-3-tfstate/*"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:ListBucket"]
-    resources = ["arn:aws:s3:::recipe-app-3-tfstate"]
   }
 }
 
@@ -64,11 +53,11 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.tf_backend.arn
 }
-#########################################################
 
 #########################
 # Policy for ECR access #
 #########################
+
 data "aws_iam_policy_document" "ecr" {
   statement {
     effect    = "Allow"
@@ -79,7 +68,7 @@ data "aws_iam_policy_document" "ecr" {
   statement {
     effect = "Allow"
     actions = [
-      "ecr:CreateRepository",
+      "ecr:CreateRepository", # Allow repository creation
       "ecr:CompleteLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:InitiateLayerUpload",
@@ -87,6 +76,7 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:PutImage"
     ]
     resources = [
+      "arn:aws:ecr:eu-west-2:227506592851:*", # Account-level ARN for CreateRepository
       "arn:aws:ecr:eu-west-2:227506592851:repository/*"
     ]
   }
@@ -104,24 +94,10 @@ data "aws_iam_policy_document" "ecr" {
   }
 }
 
-data "aws_iam_policy_document" "iam" {
-  statement {
-    effect = "Allow"
-    actions = ["iam:CreateUser"]
-    resources = ["arn:aws:iam::227506592851:user/recipe-app-api-cd"]
-  }
-}
-
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
   description = "Allow user to manage ECR resources"
   policy      = data.aws_iam_policy_document.ecr.json
-}
-
-resource "aws_iam_policy" "iam" {
-  name        = "${aws_iam_user.cd.name}-iam"
-  description = "Allow user to create IAM users"
-  policy      = data.aws_iam_policy_document.iam.json
 }
 
 resource "aws_iam_user_policy_attachment" "ecr" {
@@ -129,8 +105,32 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   policy_arn = aws_iam_policy.ecr.arn
 }
 
+#########################
+# Policy for IAM access #
+#########################
+
+data "aws_iam_policy_document" "iam" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:CreateUser",
+      "iam:AttachUserPolicy",
+      "iam:PutUserPolicy",
+      "iam:CreateAccessKey"
+    ]
+    resources = ["arn:aws:iam::227506592851:user/recipe-app-api-cd"]
+  }
+}
+
+resource "aws_iam_policy" "iam" {
+  name        = "${aws_iam_user.cd.name}-iam"
+  description = "Allow user to manage IAM resources"
+  policy      = data.aws_iam_policy_document.iam.json
+}
+
 resource "aws_iam_user_policy_attachment" "iam" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.iam.arn
 }
-#################
+
+data "aws_caller_identity" "current" {}
