@@ -10,8 +10,21 @@ resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
 }
 
+
+resource "aws_iam_user_policy" "cd" {
+  name   = "${aws_iam_user.cd.name}-policy"
+  user   = aws_iam_user.cd.name
+  policy = data.aws_iam_policy_document.cd.json
+}
+
+resource "aws_iam_user_policy_attachment" "cd" {
+  user       = aws_iam_user.cd.name
+  policy_arn = "arn:aws:iam::aws:policy/cd"
+}
+
+
 #########################################################
-# Policy for Teraform backend to S3 and DynamoDB access #
+# Policy for Terraform backend to S3 and DynamoDB access #
 #########################################################
 
 data "aws_iam_policy_document" "tf_backend" {
@@ -30,6 +43,7 @@ data "aws_iam_policy_document" "tf_backend" {
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
+
   statement {
     effect = "Allow"
     actions = [
@@ -39,18 +53,6 @@ data "aws_iam_policy_document" "tf_backend" {
       "dynamodb:DeleteItem"
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-    resources = ["arn:aws:s3:::recipe-app-3-tfstate/*"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:ListBucket"]
-    resources = ["arn:aws:s3:::recipe-app-3-tfstate"]
   }
 }
 
@@ -64,7 +66,6 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.tf_backend.arn
 }
-#########################################################
 
 #########################
 # Policy for ECR access #
@@ -80,7 +81,7 @@ data "aws_iam_policy_document" "ecr" {
   statement {
     effect = "Allow"
     actions = [
-      "ecr:CreateRepository",
+      "ecr:CreateRepository", # Allow repository creation
       "ecr:CompleteLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:InitiateLayerUpload",
@@ -88,15 +89,14 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:PutImage"
     ]
     resources = [
-      aws_ecr_repository.app.arn,
-      aws_ecr_repository.proxy.arn
+      "arn:aws:ecr:eu-west-2:227506592851:*", # Account-level ARN for CreateRepository
+      "arn:aws:ecr:eu-west-2:227506592851:repository/*"
     ]
   }
 
   statement {
     effect = "Allow"
     actions = [
-      "ecr:CreateRepository",
       "ecr:DeleteRepository",
       "ecr:DescribeRepositories",
       "ecr:ListTagsForResource",
@@ -106,7 +106,6 @@ data "aws_iam_policy_document" "ecr" {
     resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
   }
 }
-
 
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
@@ -118,5 +117,3 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
 }
-
-#################
