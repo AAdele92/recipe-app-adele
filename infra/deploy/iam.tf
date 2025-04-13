@@ -70,31 +70,6 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
 # Policy for ECR access #
 #########################
 
-# data "aws_iam_policy_document" "ecr" {
-#   statement {
-#     effect    = "Allow"
-#     actions   = ["ecr:GetAuthorizationToken"]
-#     resources = ["*"]
-#   }
-
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "ecr:CreateRepository",
-#       "ecr:CompleteLayerUpload",
-#       "ecr:UploadLayerPart",
-#       "ecr:InitiateLayerUpload",
-#       "ecr:BatchCheckLayerAvailability",
-#       "ecr:PutImage"
-#     ]
-#     resources = [
-#       aws_ecr_repository.app.arn,
-#       aws_ecr_repository.proxy.arn,
-#     ]
-#   }
-# }
-
-
 data "aws_iam_policy_document" "ecr" {
   statement {
     effect    = "Allow"
@@ -112,9 +87,26 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-    resources = ["*"] # Use wildcard for resources
+    resources = [
+      aws_ecr_repository.app.arn,
+      aws_ecr_repository.proxy.arn
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:CreateRepository",
+      "ecr:DeleteRepository",
+      "ecr:DescribeRepositories",
+      "ecr:ListTagsForResource",
+      "ecr:TagResource",
+      "ecr:UntagResource"
+    ]
+    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
   }
 }
+
 
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
