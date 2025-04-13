@@ -79,13 +79,26 @@ data "aws_iam_policy_document" "ecr" {
   statement {
     effect = "Allow"
     actions = [
+      "ecr:CreateRepository",
       "ecr:CompleteLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:InitiateLayerUpload",
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-     resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
+    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:DeleteRepository",
+      "ecr:DescribeRepositories",
+      "ecr:ListTagsForResource",
+      "ecr:TagResource",
+      "ecr:UntagResource"
+    ]
+    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
   }
 }
 
