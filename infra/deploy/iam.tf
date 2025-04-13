@@ -77,19 +77,35 @@ data "aws_iam_policy_document" "ecr" {
     resources = ["*"]
   }
 
-  statement {
-    effect = "Allow"
-    actions = [
-      "ecr:CreateRepository",
-      "ecr:CompleteLayerUpload",
-      "ecr:UploadLayerPart",
-      "ecr:InitiateLayerUpload",
-      "ecr:BatchCheckLayerAvailability",
-      "ecr:PutImage"
-    ]
-    resources = ["*"] # Use wildcard for resources
-  }
+  {
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:CreateRepository",
+        "ecr:CompleteLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:InitiateLayerUpload",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:PutImage",
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateUser",
+        "iam:CreatePolicy",
+        "iam:AttachUserPolicy",
+        "iam:CreateAccessKey"
+      ],
+      "Resource": "*"
+    }
+  ]
 }
+
 
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
