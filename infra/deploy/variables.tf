@@ -7,13 +7,13 @@ variable "prefix" {
 variable "bucket_name" {
   type        = string
   description = "s3 bucket"
-  default     = "recipeapp-3-tfstate"
+  default     = "recipe-app-3-tfstate"
 }
 
 variable "dynamodb_table_name" {
   description = "The name of the DynamoDB table for state locking"
   type        = string
-  default     = "recipe-app-lock"
+  default     = "recipe-app-3-lock"
 }
 
 variable "project_name" {
