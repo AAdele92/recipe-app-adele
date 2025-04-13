@@ -25,8 +25,8 @@ data "aws_iam_policy_document" "tf_backend" {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
-      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
-      "arn:aws:s3:::${var.bucket_name}/tf.tfstate-deploy",
+      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy",
+      "arn:aws:s3:::${var.bucket_name}/tf-tfstate-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
@@ -70,6 +70,31 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
 # Policy for ECR access #
 #########################
 
+# data "aws_iam_policy_document" "ecr" {
+#   statement {
+#     effect    = "Allow"
+#     actions   = ["ecr:GetAuthorizationToken"]
+#     resources = ["*"]
+#   }
+
+#   statement {
+#     effect = "Allow"
+#     actions = [
+#       "ecr:CreateRepository",
+#       "ecr:CompleteLayerUpload",
+#       "ecr:UploadLayerPart",
+#       "ecr:InitiateLayerUpload",
+#       "ecr:BatchCheckLayerAvailability",
+#       "ecr:PutImage"
+#     ]
+#     resources = [
+#       aws_ecr_repository.app.arn,
+#       aws_ecr_repository.proxy.arn,
+#     ]
+#   }
+# }
+
+
 data "aws_iam_policy_document" "ecr" {
   statement {
     effect    = "Allow"
@@ -80,16 +105,14 @@ data "aws_iam_policy_document" "ecr" {
   statement {
     effect = "Allow"
     actions = [
+      "ecr:CreateRepository",
       "ecr:CompleteLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:InitiateLayerUpload",
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-    resources = [
-      aws_ecr_repository.app.arn,
-      aws_ecr_repository.proxy.arn,
-    ]
+    resources = ["*"] # Use wildcard for resources
   }
 }
 
