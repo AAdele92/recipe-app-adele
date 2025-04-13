@@ -69,7 +69,6 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
 #########################
 # Policy for ECR access #
 #########################
-
 data "aws_iam_policy_document" "ecr" {
   statement {
     effect    = "Allow"
@@ -77,35 +76,19 @@ data "aws_iam_policy_document" "ecr" {
     resources = ["*"]
   }
 
-  {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:CreateRepository",
-        "ecr:CompleteLayerUpload",
-        "ecr:UploadLayerPart",
-        "ecr:InitiateLayerUpload",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:PutImage",
-        "ecr:GetAuthorizationToken"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateUser",
-        "iam:CreatePolicy",
-        "iam:AttachUserPolicy",
-        "iam:CreateAccessKey"
-      ],
-      "Resource": "*"
-    }
-  ]
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:CreateRepository",
+      "ecr:CompleteLayerUpload",
+      "ecr:UploadLayerPart",
+      "ecr:InitiateLayerUpload",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:PutImage"
+    ]
+    resources = ["*"] # Use wildcard for resources
+  }
 }
-
 
 resource "aws_iam_policy" "ecr" {
   name        = "${aws_iam_user.cd.name}-ecr"
@@ -117,5 +100,4 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
 }
-
 #################
