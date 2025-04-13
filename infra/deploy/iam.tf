@@ -87,10 +87,7 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-    resources = [
-      aws_ecr_repository.app.arn,
-      aws_ecr_repository.proxy.arn,
-    ]
+    resources = ["*"] # Use wildcard for resources
   }
 }
 
