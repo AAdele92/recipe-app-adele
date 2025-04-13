@@ -1,7 +1,7 @@
 variable "project_name" {
   type        = string
   description = "project name"
-  default     = "recipeapp-3"
+  default     = "recipe-app-3"
 }
 
 variable "contact" {
@@ -14,7 +14,7 @@ variable "contact" {
 variable "bucket_name" {
   type        = string
   description = "s3 bucket"
-  default     = "recipeapp-3-tfstate"
+  default     = "recipe-app-3-tfstate"
 }
 
 variable "block_public_acls" {
@@ -38,23 +38,23 @@ variable "region" {
 variable "kms_key_id" {
   description = "The ID of the KMS key for S3 encryption"
   type        = string
-  default     = "recipe-app-kms-key"
+  default     = "recipe-app-3-kms-key"
 }
 
 variable "dynamodb_table_name" {
   description = "The name of the DynamoDB table for state locking"
   type        = string
-  default     = "recipe-app-lock"
+  default     = "recipe-app-3-lock"
 }
 
 variable "ecr_repository_name" {
   description = "The name of the ECR repository"
   type        = string
-  default     = "recipeapp-3-ecr"
+  default     = "recipe-app-3-ecr"
 }
 
 variable "ecr_repository_proxy_name" {
   description = "The name of the ECR repository for proxy"
   type        = string
-  default     = "recipeapp-3-ecr-proxy"
+  default     = "recipe-app-3-ecr-proxy"
 }
