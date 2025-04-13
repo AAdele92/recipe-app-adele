@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage"
     ]
-    resources = ["*"] # Use wildcard for resources
+     resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
   }
 }
 
