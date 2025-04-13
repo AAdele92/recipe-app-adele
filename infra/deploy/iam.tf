@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "tf_backend" {
 
   statement {
     effect  = "Allow"
-    actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:HeadObject"]
+    actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf.tfstate-deploy",
@@ -39,6 +39,18 @@ data "aws_iam_policy_document" "tf_backend" {
       "dynamodb:DeleteItem"
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+    resources = ["arn:aws:s3:::recipe-app-3-tfstate/*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::recipe-app-3-tfstate"]
   }
 }
 
@@ -91,3 +103,5 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
 }
+
+#################
