@@ -56,3 +56,4 @@ jobs:
           docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
           docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
 
+###############
