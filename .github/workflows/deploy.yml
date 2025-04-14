@@ -26,7 +26,7 @@ jobs:
           if [[ $GITHUB_REF == 'refs/heads/prod' ]]; then
             echo "prod" > .workspace
           else
-            echo "staging" > .workspace=======
+          echo "staging" > .workspace
           fi
 
       - name: Terraform Apply
@@ -54,6 +54,6 @@ jobs:
           docker push ${{ vars.ECR_REPO_APP }}:$GITHUB_SHA
           docker build --compress -t ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA proxy/
           docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
-          docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
+        
 
 ###############
