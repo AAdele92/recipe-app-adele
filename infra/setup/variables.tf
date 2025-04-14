@@ -58,3 +58,5 @@ variable "ecr_repository_proxy_name" {
   type        = string
   default     = "recipe-app-3-ecr-proxy"
 }
+
+

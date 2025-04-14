@@ -34,7 +34,7 @@ resource "aws_iam_access_key" "cd" {
 }
 
 #########################################################
-# Policy for Teraform backend to S3 and DynamoDB access #
+# Policy for Terraform backend to S3 and DynamoDB access #
 #########################################################
 
 data "aws_iam_policy_document" "tf_backend" {
@@ -49,10 +49,12 @@ data "aws_iam_policy_document" "tf_backend" {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
+
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
+
   statement {
     effect = "Allow"
     actions = [
@@ -75,7 +77,6 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.tf_backend.arn
 }
-#########################################################
 
 #########################
 # Policy for ECR access #
@@ -91,6 +92,7 @@ data "aws_iam_policy_document" "ecr" {
   statement {
     effect = "Allow"
     actions = [
+      "ecr:CreateRepository", # Allow repository creation
       "ecr:CompleteLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:InitiateLayerUpload",
@@ -98,9 +100,21 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:PutImage"
     ]
     resources = [
-      aws_ecr_repository.app.arn,
-      aws_ecr_repository.proxy.arn,
+      "arn:aws:ecr:eu-west-2:227506592851:*", # Account-level ARN for CreateRepository
+      "arn:aws:ecr:eu-west-2:227506592851:repository/*"
     ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:DeleteRepository",
+      "ecr:DescribeRepositories",
+      "ecr:ListTagsForResource",
+      "ecr:TagResource",
+      "ecr:UntagResource"
+    ]
+    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
   }
 }
 
