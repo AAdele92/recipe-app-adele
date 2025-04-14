@@ -28,6 +28,16 @@ jobs:
           else
             echo "staging" > .workspace=======
           fi
+      - name: Push to ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com
+          docker build --compress -t ${{ vars.ECR_REPO_APP }}:$GITHUB_SHA .
+          docker push ${{ vars.ECR_REPO_APP }}:$GITHUB_SHA
+          docker build --compress -t ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA proxy/
+          docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
 
       - name: Terraform Apply
         env:
@@ -44,16 +54,7 @@ jobs:
           docker compose run --rm terraform -chdir=deploy/ workspace select -or-create $workspace
           docker compose run --rm terraform -chdir=deploy/ apply --auto-approve
 
-      - name: Push to ECR
-        env:
-          AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com
-          docker build --compress -t ${{ vars.ECR_REPO_APP }}:$GITHUB_SHA .
-          docker push ${{ vars.ECR_REPO_APP }}:$GITHUB_SHA
-          docker build --compress -t ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA proxy/
-          docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
-          docker push ${{ vars.ECR_REPO_PROXY }}:$GITHUB_SHA
+     
+
 
 ###############
