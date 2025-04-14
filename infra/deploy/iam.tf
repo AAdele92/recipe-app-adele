@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "cd" {
       "iam:PutUserPolicy",
       "iam:CreateAccessKey"
     ]
-    resources = ["*"]
+    resources = ["arn:aws:s3:::${var.project_name}-cd"]
   }
 }
 
