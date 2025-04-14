@@ -6,6 +6,29 @@ resource "aws_iam_user" "cd" {
   name = "recipe-app-api-cd"
 }
 
+data "aws_iam_policy_document" "cd" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:CreateUser",
+      "iam:AttachUserPolicy",
+      "iam:PutUserPolicy",
+      "iam:CreateAccessKey"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "cd" {
+  name        = "${aws_iam_user.cd.name}-iam"
+  description = "Allow user to manage IAM resources"
+  policy      = data.aws_iam_policy_document.cd.json
+}
+resource "aws_iam_user_policy_attachment" "cd" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.cd.arn
+}
+
 resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
 }
@@ -17,7 +40,8 @@ resource "aws_iam_access_key" "cd" {
 data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
-    actions   = ["s3:ListBucket"]
+    actions   = ["s3:ListBucket", "s3:GetObject"]
+             
     resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 
@@ -25,8 +49,8 @@ data "aws_iam_policy_document" "tf_backend" {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
-      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy",
-      "arn:aws:s3:::${var.bucket_name}/tf-tfstate-deploy/*",
+
+      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
@@ -105,32 +129,3 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   policy_arn = aws_iam_policy.ecr.arn
 }
 
-#########################
-# Policy for IAM access #
-#########################
-
-data "aws_iam_policy_document" "iam" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "iam:CreateUser",
-      "iam:AttachUserPolicy",
-      "iam:PutUserPolicy",
-      "iam:CreateAccessKey"
-    ]
-    resources = ["arn:aws:iam::227506592851:user/recipe-app-api-cd"]
-  }
-}
-
-resource "aws_iam_policy" "iam" {
-  name        = "${aws_iam_user.cd.name}-iam"
-  description = "Allow user to manage IAM resources"
-  policy      = data.aws_iam_policy_document.iam.json
-}
-
-resource "aws_iam_user_policy_attachment" "iam" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.iam.arn
-}
-
-data "aws_caller_identity" "current" {}

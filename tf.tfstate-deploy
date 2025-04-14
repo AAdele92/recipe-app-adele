@@ -1,0 +1,459 @@
+{
+  "version": 4,
+  "terraform_version": "1.9.8",
+  "serial": 7,
+  "lineage": "9b5055b0-ef2f-9db1-adf3-f5e5728de4e8",
+  "outputs": {
+    "cd_user_access_key_id": {
+      "value": "AKIATJ6DTDRJVTBO4B6J",
+      "type": "string"
+    },
+    "cd_user_access_key_secret": {
+      "value": "G8+gTCvTEX6wyl1i4ZfPCzXVv0nfRMWrJmOfQCaA",
+      "type": "string",
+      "sensitive": true
+    },
+    "ecr_repo_app": {
+      "value": "227506592851.dkr.ecr.eu-west-2.amazonaws.com/recipe-app-3-ecr",
+      "type": "string"
+    },
+    "ecr_repo_proxy": {
+      "value": "227506592851.dkr.ecr.eu-west-2.amazonaws.com/recipe-app-3-ecr-proxy",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_iam_policy_document",
+      "name": "ecr",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "1470172675",
+            "json": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"ecr:GetAuthorizationToken\",\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ecr:UploadLayerPart\",\n        \"ecr:PutImage\",\n        \"ecr:InitiateLayerUpload\",\n        \"ecr:CompleteLayerUpload\",\n        \"ecr:BatchCheckLayerAvailability\"\n      ],\n      \"Resource\": [\n        \"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr-proxy\",\n        \"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr\"\n      ]\n    }\n  ]\n}",
+            "minified_json": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"ecr:GetAuthorizationToken\",\"Resource\":\"*\"},{\"Effect\":\"Allow\",\"Action\":[\"ecr:UploadLayerPart\",\"ecr:PutImage\",\"ecr:InitiateLayerUpload\",\"ecr:CompleteLayerUpload\",\"ecr:BatchCheckLayerAvailability\"],\"Resource\":[\"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr-proxy\",\"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr\"]}]}",
+            "override_json": null,
+            "override_policy_documents": null,
+            "policy_id": null,
+            "source_json": null,
+            "source_policy_documents": null,
+            "statement": [
+              {
+                "actions": [
+                  "ecr:GetAuthorizationToken"
+                ],
+                "condition": [],
+                "effect": "Allow",
+                "not_actions": [],
+                "not_principals": [],
+                "not_resources": [],
+                "principals": [],
+                "resources": [
+                  "*"
+                ],
+                "sid": ""
+              },
+              {
+                "actions": [
+                  "ecr:BatchCheckLayerAvailability",
+                  "ecr:CompleteLayerUpload",
+                  "ecr:InitiateLayerUpload",
+                  "ecr:PutImage",
+                  "ecr:UploadLayerPart"
+                ],
+                "condition": [],
+                "effect": "Allow",
+                "not_actions": [],
+                "not_principals": [],
+                "not_resources": [],
+                "principals": [],
+                "resources": [
+                  "arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr",
+                  "arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr-proxy"
+                ],
+                "sid": ""
+              }
+            ],
+            "version": "2012-10-17"
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_iam_policy_document",
+      "name": "tf_backend",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "3540442616",
+            "json": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:ListBucket\",\n      \"Resource\": \"arn:aws:s3:::recipe-app-3-tfstate\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:GetObject\",\n        \"s3:DeleteObject\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy/*\",\n        \"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy-env/*\"\n      ]\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"dynamodb:PutItem\",\n        \"dynamodb:GetItem\",\n        \"dynamodb:DescribeTable\",\n        \"dynamodb:DeleteItem\"\n      ],\n      \"Resource\": \"arn:aws:dynamodb:*:*:table/recipe-app-3-lock\"\n    }\n  ]\n}",
+            "minified_json": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"s3:ListBucket\",\"Resource\":\"arn:aws:s3:::recipe-app-3-tfstate\"},{\"Effect\":\"Allow\",\"Action\":[\"s3:PutObject\",\"s3:GetObject\",\"s3:DeleteObject\"],\"Resource\":[\"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy/*\",\"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy-env/*\"]},{\"Effect\":\"Allow\",\"Action\":[\"dynamodb:PutItem\",\"dynamodb:GetItem\",\"dynamodb:DescribeTable\",\"dynamodb:DeleteItem\"],\"Resource\":\"arn:aws:dynamodb:*:*:table/recipe-app-3-lock\"}]}",
+            "override_json": null,
+            "override_policy_documents": null,
+            "policy_id": null,
+            "source_json": null,
+            "source_policy_documents": null,
+            "statement": [
+              {
+                "actions": [
+                  "s3:ListBucket"
+                ],
+                "condition": [],
+                "effect": "Allow",
+                "not_actions": [],
+                "not_principals": [],
+                "not_resources": [],
+                "principals": [],
+                "resources": [
+                  "arn:aws:s3:::recipe-app-3-tfstate"
+                ],
+                "sid": ""
+              },
+              {
+                "actions": [
+                  "s3:DeleteObject",
+                  "s3:GetObject",
+                  "s3:PutObject"
+                ],
+                "condition": [],
+                "effect": "Allow",
+                "not_actions": [],
+                "not_principals": [],
+                "not_resources": [],
+                "principals": [],
+                "resources": [
+                  "arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy-env/*",
+                  "arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy/*"
+                ],
+                "sid": ""
+              },
+              {
+                "actions": [
+                  "dynamodb:DeleteItem",
+                  "dynamodb:DescribeTable",
+                  "dynamodb:GetItem",
+                  "dynamodb:PutItem"
+                ],
+                "condition": [],
+                "effect": "Allow",
+                "not_actions": [],
+                "not_principals": [],
+                "not_resources": [],
+                "principals": [],
+                "resources": [
+                  "arn:aws:dynamodb:*:*:table/recipe-app-3-lock"
+                ],
+                "sid": ""
+              }
+            ],
+            "version": "2012-10-17"
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_region",
+      "name": "current",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "description": "Europe (London)",
+            "endpoint": "ec2.eu-west-2.amazonaws.com",
+            "id": "eu-west-2",
+            "name": "eu-west-2"
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_ecr_repository",
+      "name": "app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr",
+            "encryption_configuration": [
+              {
+                "encryption_type": "AES256",
+                "kms_key": ""
+              }
+            ],
+            "force_delete": true,
+            "id": "recipe-app-3-ecr",
+            "image_scanning_configuration": [
+              {
+                "scan_on_push": false
+              }
+            ],
+            "image_tag_mutability": "MUTABLE",
+            "name": "recipe-app-3-ecr",
+            "registry_id": "227506592851",
+            "repository_url": "227506592851.dkr.ecr.eu-west-2.amazonaws.com/recipe-app-3-ecr",
+            "tags": null,
+            "tags_all": {
+              "BillingID": "recipe Account",
+              "Contact": "AAA@example.com",
+              "Environment": "terraform.workspace",
+              "ManagedBy": "Terraform/deploy",
+              "Project": "recipe-app-3"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxMjAwMDAwMDAwMDAwfX0="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_ecr_repository",
+      "name": "proxy",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr-proxy",
+            "encryption_configuration": [
+              {
+                "encryption_type": "AES256",
+                "kms_key": ""
+              }
+            ],
+            "force_delete": true,
+            "id": "recipe-app-3-ecr-proxy",
+            "image_scanning_configuration": [
+              {
+                "scan_on_push": false
+              }
+            ],
+            "image_tag_mutability": "MUTABLE",
+            "name": "recipe-app-3-ecr-proxy",
+            "registry_id": "227506592851",
+            "repository_url": "227506592851.dkr.ecr.eu-west-2.amazonaws.com/recipe-app-3-ecr-proxy",
+            "tags": null,
+            "tags_all": {
+              "BillingID": "recipe Account",
+              "Contact": "AAA@example.com",
+              "Environment": "terraform.workspace",
+              "ManagedBy": "Terraform/deploy",
+              "Project": "recipe-app-3"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxMjAwMDAwMDAwMDAwfX0="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_access_key",
+      "name": "cd",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "create_date": "2025-04-13T14:16:37Z",
+            "encrypted_secret": null,
+            "encrypted_ses_smtp_password_v4": null,
+            "id": "AKIATJ6DTDRJVTBO4B6J",
+            "key_fingerprint": null,
+            "pgp_key": null,
+            "secret": "G8+gTCvTEX6wyl1i4ZfPCzXVv0nfRMWrJmOfQCaA",
+            "ses_smtp_password_v4": "BHGEd+4Mm5sgXXPmkNVoKwvGh0OGItXeH2V2RWIKmwel",
+            "status": "Active",
+            "user": "recipe-app-api-cd"
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "ses_smtp_password_v4"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "secret"
+              }
+            ]
+          ],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_user.cd"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "ecr",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-ecr",
+            "attachment_count": 0,
+            "description": "Allow user to manage ECR resources",
+            "id": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-ecr",
+            "name": "recipe-app-api-cd-ecr",
+            "name_prefix": "",
+            "path": "/",
+            "policy": "{\"Statement\":[{\"Action\":\"ecr:GetAuthorizationToken\",\"Effect\":\"Allow\",\"Resource\":\"*\"},{\"Action\":[\"ecr:UploadLayerPart\",\"ecr:PutImage\",\"ecr:InitiateLayerUpload\",\"ecr:CompleteLayerUpload\",\"ecr:BatchCheckLayerAvailability\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr-proxy\",\"arn:aws:ecr:eu-west-2:227506592851:repository/recipe-app-3-ecr\"]}],\"Version\":\"2012-10-17\"}",
+            "policy_id": "ANPATJ6DTDRJ7X5MO7VQ3",
+            "tags": null,
+            "tags_all": {
+              "BillingID": "recipe Account",
+              "Contact": "AAA@example.com",
+              "Environment": "terraform.workspace",
+              "ManagedBy": "Terraform/deploy",
+              "Project": "recipe-app-3"
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_ecr_repository.app",
+            "aws_ecr_repository.proxy",
+            "aws_iam_user.cd",
+            "data.aws_iam_policy_document.ecr"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "tf_backend",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-tf-s3-dynamodb",
+            "attachment_count": 0,
+            "description": "Allow user to use S3 and DynamoDB for TF backend resources",
+            "id": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-tf-s3-dynamodb",
+            "name": "recipe-app-api-cd-tf-s3-dynamodb",
+            "name_prefix": "",
+            "path": "/",
+            "policy": "{\"Statement\":[{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:s3:::recipe-app-3-tfstate\"},{\"Action\":[\"s3:PutObject\",\"s3:GetObject\",\"s3:DeleteObject\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy/*\",\"arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy-env/*\"]},{\"Action\":[\"dynamodb:PutItem\",\"dynamodb:GetItem\",\"dynamodb:DescribeTable\",\"dynamodb:DeleteItem\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:dynamodb:*:*:table/recipe-app-3-lock\"}],\"Version\":\"2012-10-17\"}",
+            "policy_id": "ANPATJ6DTDRJVZGG4UUUL",
+            "tags": null,
+            "tags_all": {
+              "BillingID": "recipe Account",
+              "Contact": "AAA@example.com",
+              "Environment": "terraform.workspace",
+              "ManagedBy": "Terraform/deploy",
+              "Project": "recipe-app-3"
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_user.cd",
+            "data.aws_iam_policy_document.tf_backend"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user",
+      "name": "cd",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::227506592851:user/recipe-app-api-cd",
+            "force_destroy": false,
+            "id": "recipe-app-api-cd",
+            "name": "recipe-app-api-cd",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": null,
+            "tags_all": {
+              "BillingID": "recipe Account",
+              "Contact": "AAA@example.com",
+              "Environment": "terraform.workspace",
+              "ManagedBy": "Terraform/deploy",
+              "Project": "recipe-app-3"
+            },
+            "unique_id": "AIDATJ6DTDRJ6XNC7PKAK"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user_policy_attachment",
+      "name": "ecr",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "recipe-app-api-cd-20250413141638231700000001",
+            "policy_arn": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-ecr",
+            "user": "recipe-app-api-cd"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_ecr_repository.app",
+            "aws_ecr_repository.proxy",
+            "aws_iam_policy.ecr",
+            "aws_iam_user.cd",
+            "data.aws_iam_policy_document.ecr"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_user_policy_attachment",
+      "name": "tf_backend",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "recipe-app-api-cd-20250413141638370600000002",
+            "policy_arn": "arn:aws:iam::227506592851:policy/recipe-app-api-cd-tf-s3-dynamodb",
+            "user": "recipe-app-api-cd"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_policy.tf_backend",
+            "aws_iam_user.cd",
+            "data.aws_iam_policy_document.tf_backend"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
