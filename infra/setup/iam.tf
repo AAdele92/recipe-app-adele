@@ -45,18 +45,6 @@ data "aws_iam_policy_document" "tf_backend" {
   }
 
   statement {
-    effect = "Allow"
-    actions = [
-      "kms:Decrypt",
-      "kms:Encrypt",
-      "kms:GenerateDataKey",
-      "kms:DescribeKey"
-    ]
-
-    resources = ["arn:aws:kms:*:*:key/${var.kms_key_id}"]
-  }
-
-  statement {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
