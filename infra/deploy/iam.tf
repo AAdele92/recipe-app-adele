@@ -100,8 +100,8 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:PutImage"
     ]
     resources = [
-      "arn:aws:ecr:eu-west-2:227506592851:*", # Account-level ARN for CreateRepository
-      "arn:aws:ecr:eu-west-2:227506592851:repository/*"
+      "arn:aws:ecr:*:*:*", # Account-level ARN for CreateRepository
+      "arn:aws:ecr:*:*:repository/*"
     ]
   }
 
@@ -114,7 +114,7 @@ data "aws_iam_policy_document" "ecr" {
       "ecr:TagResource",
       "ecr:UntagResource"
     ]
-    resources = ["arn:aws:ecr:eu-west-2:227506592851:repository/*"]
+    resources = ["arn:aws:ecr:*:*:repository/*"]
   }
 }
 
