@@ -40,8 +40,20 @@ resource "aws_iam_access_key" "cd" {
 data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
-    actions   = ["s3:ListBucket"}
+    actions   = ["s3:ListBucket"]
     resources = ["arn:aws:s3:::${var.bucket_name}"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey",
+      "kms:DescribeKey"
+    ]
+
+    resources = ["arn:aws:kms:*:*:key/${var.kms_key_id}"]
   }
 
   statement {
@@ -53,6 +65,7 @@ data "aws_iam_policy_document" "tf_backend" {
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
+
 
   statement {
     effect = "Allow"
