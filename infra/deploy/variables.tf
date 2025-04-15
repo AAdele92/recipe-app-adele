@@ -2,7 +2,7 @@ variable "prefix" {
   type        = string
   description = "prefix for all resources"
   default     = "raa-3"
-  
+
 }
 variable "bucket_name" {
   type        = string
