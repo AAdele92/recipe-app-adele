@@ -14,8 +14,7 @@ backend "s3" {
   region         = "eu-west-2"
   encrypt        = true  
   dynamodb_table = "recipe-app-3-lock"
-  
-  } 
+ } 
 }
 
 
