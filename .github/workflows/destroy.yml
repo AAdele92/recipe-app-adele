@@ -1,6 +1,5 @@
 name: Destroy
-
-
+# This workflow is triggered manually and allows the user to select the environment to destroy.
 on:
   workflow_dispatch:
     inputs:
