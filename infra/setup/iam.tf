@@ -40,16 +40,14 @@ resource "aws_iam_access_key" "cd" {
 data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
-    actions   = ["s3:ListBucket"]
+    actions   = ["s3:ListBucket, GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 
-  statement {
+   statement {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
-
-      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
