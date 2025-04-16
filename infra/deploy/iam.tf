@@ -41,7 +41,7 @@
 #   statement {
 #     effect    = "Allow"
 #     actions   = ["s3:ListBucket", "s3:GetObject"]
-             
+
 #     resources = ["arn:aws:s3:::${var.bucket_name}"]
 #   }
 
