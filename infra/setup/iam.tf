@@ -33,9 +33,9 @@ resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
 }
 
-#########################################################
-# Policy for Terraform backend to S3 and DynamoDB access #
-#########################################################
+#####################################################################
+# Policy for Terraform backend to S3, KMS and DynamoDB access #
+#####################################################################
 
 data "aws_iam_policy_document" "tf_backend" {
   statement {
@@ -64,11 +64,32 @@ data "aws_iam_policy_document" "tf_backend" {
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:ListAliases",
+      "kms:ListKeyPolicies",
+      "kms:ListResourceTags",
+      "kms:ListKeys",
+      "kms:ListGrants",
+      "kms:ListRetirableGrants"
+    ]
+    resources = [
+      "arn:aws:kms:*:*:key/${var.kms_key_id}"
+    ]
+  }
 }
 
 resource "aws_iam_policy" "tf_backend" {
   name        = "${aws_iam_user.cd.name}-tf-s3-dynamodb"
   description = "Allow user to use S3 and DynamoDB for TF backend resources"
+  policy      = data.aws_iam_policy_document.tf_backend.json
+}
+
+resource "aws_iam_policy" "tf_backend_kms" {
+  name        = "${aws_iam_user.cd.name}-tf-s3-kms"
+  description = "Allow user to use the KMS key for encryption and decryption"
   policy      = data.aws_iam_policy_document.tf_backend.json
 }
 
