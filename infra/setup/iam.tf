@@ -76,9 +76,7 @@ data "aws_iam_policy_document" "tf_backend" {
       "kms:ListGrants",
       "kms:ListRetirableGrants"
     ]
-    resources = [
-      "arn:aws:kms:*:*:key/${var.kms_key_id}"
-    ]
+    resources = ["arn:aws:kms:*:*:key/${var.kms_key_id}"]
   }
 }
 
