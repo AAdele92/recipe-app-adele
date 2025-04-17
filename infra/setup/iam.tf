@@ -2,90 +2,83 @@
 # Create IAM user and policies for Continuous Deployment (CD) account #
 #######################################################################
 
+
 resource "aws_iam_user" "cd" {
   name = "recipe-app-api-cd"
 }
 
-# data "aws_iam_policy_document" "cd" {
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "iam:CreateUser",
-#       "iam:AttachUserPolicy",
-#       "iam:PutUserPolicy",
-#       "iam:CreateAccessKey"
-#     ]
-#     resources = ["arn:aws:iam::*:user/${var.project_name}-cd"]
-#   }
-# }
+data "aws_iam_policy_document" "cd" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:CreateUser",
+      "iam:AttachUserPolicy",
+      "iam:PutUserPolicy",
+      "iam:CreateAccessKey"
+    ]
+    resources = ["arn:aws:iam::*:user/${var.project_name}-cd"]
+  }
+}
 
-# resource "aws_iam_policy" "cd" {
-#   name        = "${aws_iam_user.cd.name}-iam"
-#   description = "Allow user to manage IAM resources"
-#   policy      = data.aws_iam_policy_document.cd.json
-# }
-# resource "aws_iam_user_policy_attachment" "cd" {
-#   user       = aws_iam_user.cd.name
-#   policy_arn = aws_iam_policy.cd.arn
-# }
+resource "aws_iam_policy" "cd" {
+  name        = "${aws_iam_user.cd.name}-iam"
+  description = "Allow user to manage IAM resources"
+  policy      = data.aws_iam_policy_document.cd.json
+}
+resource "aws_iam_user_policy_attachment" "cd" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.cd.arn
+}
 
 resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
 }
 
-#####################################################################
-# Policy for Terraform backend to S3, KMS and DynamoDB access #
-#####################################################################
+#########################################################
+# Policy for Terraform backend to S3 and DynamoDB access #
+#########################################################
 
 data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
-    actions   = ["s3:ListBucket", "s3:GetObject"]
-    resources = ["arn:aws:s3:::*"]
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey",
+      "kms:DescribeKey"
+    ]
+
+    resources = ["arn:aws:kms:*:*:key/${var.kms_key_id}"]
   }
 
   statement {
     effect  = "Allow"
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
     resources = [
+
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
   }
-    
-  
-    statement {
-      effect = "Allow"
-      actions = [
-        "dynamodb:DescribeTable",
-        "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:DeleteItem"
-      ]
-      resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
-    }
+
 
   statement {
     effect = "Allow"
     actions = [
-      "kms:ListAliases",
-      "kms:ListKeyPolicies",
-      "kms:ListResourceTags",
-      "kms:ListKeys",
-      "kms:ListGrants",
-      "kms:ListRetirableGrants"
+      "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem"
     ]
-    resources = ["arn:aws:kms:*:*:key/${var.kms_key_id}"]
+    resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
   }
 }
-
-resource "aws_iam_policy" "tf_backend_kms" {
-  name        = "${aws_iam_user.cd.name}-tf-s3-kms"
-  description = "Allow user to use the KMS key for encryption and decryption"
-  policy      = data.aws_iam_policy_document.tf_backend.json
-}
-
-
 
 resource "aws_iam_policy" "tf_backend" {
   name        = "${aws_iam_user.cd.name}-tf-s3-dynamodb"
