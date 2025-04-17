@@ -6,28 +6,28 @@ resource "aws_iam_user" "cd" {
   name = "recipe-app-api-cd"
 }
 
-data "aws_iam_policy_document" "cd" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "iam:CreateUser",
-      "iam:AttachUserPolicy",
-      "iam:PutUserPolicy",
-      "iam:CreateAccessKey"
-    ]
-    resources = ["arn:aws:iam::*:user/${var.project_name}-cd"]
-  }
-}
+# data "aws_iam_policy_document" "cd" {
+#   statement {
+#     effect = "Allow"
+#     actions = [
+#       "iam:CreateUser",
+#       "iam:AttachUserPolicy",
+#       "iam:PutUserPolicy",
+#       "iam:CreateAccessKey"
+#     ]
+#     resources = ["arn:aws:iam::*:user/${var.project_name}-cd"]
+#   }
+# }
 
-resource "aws_iam_policy" "cd" {
-  name        = "${aws_iam_user.cd.name}-iam"
-  description = "Allow user to manage IAM resources"
-  policy      = data.aws_iam_policy_document.cd.json
-}
-resource "aws_iam_user_policy_attachment" "cd" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.cd.arn
-}
+# resource "aws_iam_policy" "cd" {
+#   name        = "${aws_iam_user.cd.name}-iam"
+#   description = "Allow user to manage IAM resources"
+#   policy      = data.aws_iam_policy_document.cd.json
+# }
+# resource "aws_iam_user_policy_attachment" "cd" {
+#   user       = aws_iam_user.cd.name
+#   policy_arn = aws_iam_policy.cd.arn
+# }
 
 resource "aws_iam_access_key" "cd" {
   user = aws_iam_user.cd.name
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
     actions   = ["s3:ListBucket"]
-    resources = ["arn:aws:s3:::${var.bucket_name}"]
+    resources = ["arn:aws:s3:::*"]
   }
 
   statement {
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "tf_backend" {
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
       "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
-    }
+  }
     
   
     statement {
@@ -97,7 +97,6 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.tf_backend.arn
 }
-  
 
 
 #########################
