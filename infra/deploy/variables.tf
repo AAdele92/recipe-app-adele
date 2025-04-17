@@ -15,7 +15,7 @@ variable "dynamodb_table_name" {
   type        = string
   default     = "recipe-app-3-lock"
 }
-
+s
 variable "project_name" {
   type        = string
   description = "project name"
