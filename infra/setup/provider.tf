@@ -18,7 +18,8 @@ backend "s3" {
 
 
 provider "aws" {
-  region = var.region
+  region = "eu-west-2"
+
   default_tags {
     tags = {
       Environment = "terraform.workspace"
