@@ -74,7 +74,10 @@ data "aws_iam_policy_document" "tf_backend" {
       "dynamodb:DescribeTable",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
-      "dynamodb:DeleteItem"
+      "dynamodb:DeleteItem",
+      "dynamodb:Scan",
+      "dynamodb:Query",
+     "dynamodb:UpdateItem"
     ]
     resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
   }
