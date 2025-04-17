@@ -41,28 +41,29 @@ data "aws_iam_policy_document" "tf_backend" {
   statement {
     effect    = "Allow"
     actions   = ["s3:ListBucket"]
-    resources = ["arn:aws:s3:::recipe-app-3-tfstate"]
-  }
-
-   statement {
-    effect  = "Allow"
-    actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-    resources = [
-      "arn:arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy/*",
-      "arn:aws:s3:::recipe-app-3-tfstate/tf-state-deploy-env/*"
-    ]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 
   statement {
-    effect = "Allow"
-    actions = [
-      "dynamodb:DescribeTable",
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:DeleteItem"
+    effect  = "Allow"
+    actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+    resources = [
+      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy/*",
+      "arn:aws:s3:::${var.bucket_name}/tf-state-deploy-env/*"
     ]
-    resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
-  }
+    }
+    
+  
+    statement {
+      effect = "Allow"
+      actions = [
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem"
+      ]
+      resources = ["arn:aws:dynamodb:*:*:table/${var.dynamodb_table_name}"]
+    }
 
   statement {
     effect = "Allow"
@@ -78,15 +79,17 @@ data "aws_iam_policy_document" "tf_backend" {
   }
 }
 
-resource "aws_iam_policy" "tf_backend" {
-  name        = "${aws_iam_user.cd.name}-tf-s3-dynamodb"
-  description = "Allow user to use S3 and DynamoDB for TF backend resources"
-  policy      = data.aws_iam_policy_document.tf_backend.json
-}
-
 resource "aws_iam_policy" "tf_backend_kms" {
   name        = "${aws_iam_user.cd.name}-tf-s3-kms"
   description = "Allow user to use the KMS key for encryption and decryption"
+  policy      = data.aws_iam_policy_document.tf_backend.json
+}
+
+
+
+resource "aws_iam_policy" "tf_backend" {
+  name        = "${aws_iam_user.cd.name}-tf-s3-dynamodb"
+  description = "Allow user to use S3 and DynamoDB for TF backend resources"
   policy      = data.aws_iam_policy_document.tf_backend.json
 }
 
@@ -94,6 +97,8 @@ resource "aws_iam_user_policy_attachment" "tf_backend" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.tf_backend.arn
 }
+  
+
 
 #########################
 # Policy for ECR access #
@@ -145,6 +150,9 @@ resource "aws_iam_user_policy_attachment" "ecr" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.ecr.arn
 }
+
+
+
 
 #########################
 # Policy for EC2 access #
