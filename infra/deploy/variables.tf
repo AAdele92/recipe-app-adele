@@ -47,3 +47,14 @@ variable "ecr_repository_proxy_name" {
   type        = string
   default     = "recipe-app-3-ecr-proxy"
 }
+
+
+variable "db_username" {
+  description = "Username for the recipe app api database"
+  type        = string
+  default     = "recipe-app-3"
+}
+
+variable "db_password" {
+  description = "Password for the Terraform database"
+}
