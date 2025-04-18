@@ -11,14 +11,14 @@ data "aws_iam_policy_document" "cd" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:GetObject",
-      "iam:CreateUser",
-      "iam:AttachUserPolicy",
-      "iam:PutUserPolicy",
-      "iam:CreateAccessKey"
+      "s3:GetObject"
+      # "iam:CreateUser",
+      # "iam:AttachUserPolicy",
+      # "iam:PutUserPolicy",
+      # "iam:CreateAccessKey"
 
     ]
-    resources = ["arn:aws:iam::*:user/${var.project_name}-cd"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
   }
 }
 
