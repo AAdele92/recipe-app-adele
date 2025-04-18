@@ -12,11 +12,6 @@ data "aws_iam_policy_document" "cd" {
     effect = "Allow"
     actions = [
       "s3:GetObject"
-      # "iam:CreateUser",
-      # "iam:AttachUserPolicy",
-      # "iam:PutUserPolicy",
-      # "iam:CreateAccessKey"
-
     ]
     resources = ["arn:aws:s3:::${var.bucket_name}/*"]
   }
