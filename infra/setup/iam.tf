@@ -11,6 +11,21 @@ data "aws_iam_policy_document" "cd" {
   statement {
     effect = "Allow"
     actions = [
+      "iam:ListInstanceProfilesForRole",
+      "iam:ListAttachedRolePolicies",
+      "iam:DeleteRole",
+      "iam:ListPolicyVersions",
+      "iam:DeletePolicy",
+      "iam:DetachRolePolicy",
+      "iam:ListRolePolicies",
+      "iam:GetRole",
+      "iam:GetPolicyVersion",
+      "iam:GetPolicy",
+      "iam:CreateRole",
+      "iam:CreatePolicy",
+      "iam:AttachRolePolicy",
+      "iam:TagRole",
+      "iam:TagPolicy",
       "iam:PassRole"
     ]
     resources = ["arn:aws:s3:::${var.bucket_name}/*"]
