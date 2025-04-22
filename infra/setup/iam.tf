@@ -26,9 +26,11 @@ data "aws_iam_policy_document" "cd" {
       "iam:AttachRolePolicy",
       "iam:TagRole",
       "iam:TagPolicy",
-      "iam:PassRole"
+      "iam:PassRole",
+      "s3:GetObject",
     ]
-    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    # resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    resources = ["*"]
   }
 }
 
