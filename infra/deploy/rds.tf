@@ -2,7 +2,7 @@
 # Database #
 ############
 
-  
+
 resource "aws_db_subnet_group" "main" {
   name = "${local.prefix}-main"
   subnet_ids = [
@@ -24,6 +24,11 @@ resource "aws_security_group" "rds" {
     protocol  = "tcp"
     from_port = 5432
     to_port   = 5432
+
+    # this will ensure that the security group is only accessible from the ECS service database
+    security_groups = [
+      aws_security_group.ecs_service.id
+    ]
   }
 
   tags = {
@@ -50,5 +55,26 @@ resource "aws_db_instance" "main" {
 
   tags = {
     Name = "${local.prefix}-main"
+  }
+}
+
+resource "aws_ecs_service" "api" {
+  name                   = "${local.prefix}-api"
+  cluster                = aws_ecs_cluster.main.name
+  task_definition        = aws_ecs_task_definition.api.family
+  desired_count          = 1
+  launch_type            = "FARGATE"
+  platform_version       = "1.4.0"
+  enable_execute_command = true
+
+  network_configuration {
+    assign_public_ip = true
+
+    subnets = [
+      aws_subnet.public_a.id,
+      aws_subnet.public_b.id
+    ]
+
+    security_groups = [aws_security_group.ecs_service.id]
   }
 }

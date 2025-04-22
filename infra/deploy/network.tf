@@ -121,8 +121,8 @@ resource "aws_subnet" "private_b" {
 
 resource "aws_security_group" "endpoint_access" {
   description = "Access to VPC endpoints"
-  name = "${local.prefix}-endpoint-access"
-  vpc_id = aws_vpc.main.id
+  name        = "${local.prefix}-endpoint-access"
+  vpc_id      = aws_vpc.main.id
   ingress {
     from_port   = 443
     to_port     = 443
@@ -132,9 +132,9 @@ resource "aws_security_group" "endpoint_access" {
 }
 
 resource "aws_vpc_endpoint" "ecr" {
-  vpc_id = aws_vpc.main.id
-  service_name = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
-  vpc_endpoint_type = "Interface"
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
+  vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
 
   subnet_ids = [aws_subnet.private_a.id, aws_subnet.private_b.id]

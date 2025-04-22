@@ -64,3 +64,14 @@ variable "ecr_proxy_image" {
   type        = string
   default     = "recipe-app-3-ecr-proxy_image"
 }
+
+variable "ecr_app_image" {
+  description = "Path to the ECR repo with the API image"
+  type        = string
+  default     = "recipe-app-3-ecr_app_image"
+}
+
+variable "django_secret_key" {
+  description = "Secret key for Django"
+  type        = string
+}
