@@ -40,13 +40,13 @@ resource "aws_iam_policy" "task_cd_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
   path        = "/"
   description = "Allow ECS to retrieve images and add to logs."
-  policy      = file("./templates/ecs/task-cd-role.json")
+  policy      = file("./templates/ecs/task-cd-role-policy.json")
 }
 
 resource "aws_iam_role" "task-cd-role" {
   name               = "${local.prefix}-task-cd-role"
-  assume_role_policy = file("./templates/ecs/task-cd-role.json")
-}
+  assume_role_policy = file("./templates/ecs/task-cd-role-policy.json")
+
 
 resource "aws_iam_role_policy_attachment" "task_cd_role" {
   role       = aws_iam_role.task-cd-role.name
