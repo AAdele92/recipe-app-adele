@@ -44,7 +44,7 @@ resource "aws_iam_policy" "task_cd_role_policy" {
 }
 
 resource "aws_iam_role" "task-cd-role" {
-  name               = "${local.prefix}-taskcd-role"
+  name               = "${local.prefix}-task-cd-role"
   assume_role_policy = file("./templates/ecs/task-cd-role.json")
 }
 
