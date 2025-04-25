@@ -16,8 +16,14 @@ data "aws_iam_policy_document" "cd" {
     resources = ["arn:aws:s3:::${var.bucket_name}/*"]
     
   }
+}
 
-statement {
+#########################
+# Policy for IAM access #
+#########################
+
+data "aws_iam_policy_document" "cd" {
+  statement {
     effect = "Allow"
     actions = [
       "iam:ListInstanceProfilesForRole",
@@ -42,11 +48,22 @@ statement {
       "logs:CreateLogGroup",
       "ecs:CreateCluster",
       "rds:CreateDBSubnetGroup"
-       # Ensure this is included
     ]
     resources = ["*"]
   }
 }
+
+# resource "aws_iam_policy" "cd" {
+#   name        = "${aws_iam_user.cd.name}-iam"
+#   description = "Allow user to manage IAM resources."
+#   policy      = data.aws_iam_policy_document.iam.json
+# }
+
+resource "aws_iam_user_policy_attachment" "iam" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.cd.arn
+}
+
 
 resource "aws_iam_policy" "cd" {
   name        = "${aws_iam_user.cd.name}-iam"
@@ -305,51 +322,6 @@ resource "aws_iam_user_policy_attachment" "ecs" {
   policy_arn = aws_iam_policy.ecs.arn
 }
 
-#########################
-# Policy for IAM access #
-#########################
-
-data "aws_iam_policy_document" "iam" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "iam:ListInstanceProfilesForRole",
-      "iam:ListAttachedRolePolicies",
-      "iam:DeleteRole",
-      "iam:ListPolicyVersions",
-      "iam:DeletePolicy",
-      "iam:DetachRolePolicy",
-      "iam:ListRolePolicies",
-      "iam:GetRole",
-      "iam:GetPolicyVersion",
-      "iam:GetPolicy",
-      "iam:CreateRole",
-      "iam:CreatePolicy",
-      "iam:AttachRolePolicy",
-      "iam:TagRole",
-      "iam:TagPolicy",
-      "iam:PassRole",
-      "iam:CreateRole",
-      "iam:CreatePolicy",
-      "iam:AttachRolePolicy",
-      "logs:CreateLogGroup",
-      "ecs:CreateCluster",
-      "rds:CreateDBSubnetGroup"
-    ]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_policy" "iam" {
-  name        = "${aws_iam_user.cd.name}-iam"
-  description = "Allow user to manage IAM resources."
-  policy      = data.aws_iam_policy_document.iam.json
-}
-
-resource "aws_iam_user_policy_attachment" "iam" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.iam.arn
-}
 
 ################################
 # Policy for CloudWatch access #
