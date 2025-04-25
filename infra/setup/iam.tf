@@ -321,7 +321,13 @@ data "aws_iam_policy_document" "iam" {
       "iam:AttachRolePolicy",
       "iam:TagRole",
       "iam:TagPolicy",
-      "iam:PassRole"
+      "iam:PassRole",
+      "iam:CreateRole",
+      "iam:CreatePolicy",
+      "iam:AttachRolePolicy",
+      "logs:CreateLogGroup",
+      "ecs:CreateCluster",
+      "rds:CreateDBSubnetGroup"
     ]
     resources = ["*"]
   }
