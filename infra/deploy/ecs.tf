@@ -1,5 +1,5 @@
 # 
-ECS Cluster for running app on Fargate.
+#ECS Cluster for running app on Fargate.
 #
 
 resource "aws_iam_policy" "task_execution_role_policy" {
