@@ -35,7 +35,14 @@ statement {
       "iam:AttachRolePolicy",
       "iam:TagRole",
       "iam:TagPolicy",
-      "iam:PassRole" # Ensure this is included
+      "iam:PassRole",
+      "iam:CreateRole",
+      "iam:CreatePolicy",
+      "iam:AttachRolePolicy",
+      "logs:CreateLogGroup",
+      "ecs:CreateCluster",
+      "rds:CreateDBSubnetGroup"
+       # Ensure this is included
     ]
     resources = ["*"]
   }
