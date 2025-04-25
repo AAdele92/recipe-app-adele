@@ -1,0 +1,17 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "iam:CreateRole",
+          "iam:CreatePolicy",
+          "iam:AttachRolePolicy",
+          "logs:CreateLogGroup",
+          "ecs:CreateCluster",
+          "rds:CreateDBSubnetGroup"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
