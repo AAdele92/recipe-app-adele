@@ -434,7 +434,4 @@ resource "aws_iam_policy" "task_execution_role" {
   description = "Allow user to manage ECS task execution role."
   policy      = data.aws_iam_policy_document.task_execution_role.json
 }
-resource "aws_iam_user_policy_attachment" "task_execution_role" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.task_execution_role.arn
-}
+
