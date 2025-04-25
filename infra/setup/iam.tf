@@ -379,3 +379,62 @@ resource "aws_iam_user_policy_attachment" "logs" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.logs.arn
 }
+
+#########################
+# Policy for SSM access #
+#########################
+data "aws_iam_policy_document" "ssm" {
+  statement {
+    effect = "Allow"
+    actions = [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"
+        ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ssm" {
+  name        = "${aws_iam_user.cd.name}-ssm"
+  description = "Allow user to manage SSM resources."
+  policy      = data.aws_iam_policy_document.ssm.json
+}
+resource "aws_iam_user_policy_attachment" "ssm" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.ssm.arn
+}
+
+
+#########################
+# Policy for Task execution role#
+#########################
+data "aws_iam_policy_document" "task_execution_role" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_user_policy_attachment" "task_execution_role" {
+  user       = aws_iam_user.cd.name
+  policy_arn = data.aws_iam_policy.task_execution_role.arn
+}
+resource "aws_iam_policy" "task_execution_role" {
+  name        = "${aws_iam_user.cd.name}-task-execution-role"
+  description = "Allow user to manage ECS task execution role."
+  policy      = data.aws_iam_policy_document.task_execution_role.json
+}
+resource "aws_iam_user_policy_attachment" "task_execution_role" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.task_execution_role.arn
+}

@@ -1,6 +1,6 @@
-## 
-# ECS Cluster for running app on Fargate.
-##
+# 
+ECS Cluster for running app on Fargate.
+#
 
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
@@ -36,22 +36,22 @@ resource "aws_iam_role_policy_attachment" "task_ssm_policy" {
   policy_arn = aws_iam_policy.task_ssm_policy.arn
 }
 
-# resource "aws_iam_policy" "task_cd_role_policy" {
-#   name        = "${local.prefix}-task-exec-role-policy"
-#   path        = "/"
-#   description = "Allow ECS to retrieve images and add to logs."
-#   policy      = file("./templates/ecs/task-cd-role-policy.json")
-# }
+resource "aws_iam_policy" "task_cd_role_policy" {
+  name        = "${local.prefix}-task-exec-role-policy"
+  path        = "/"
+  description = "Allow ECS to retrieve images and add to logs."
+  policy      = file("./templates/ecs/task-cd-role-policy.json")
+}
 
-# resource "aws_iam_role" "task-cd-role" {
-#   name               = "${local.prefix}-task-cd-role"
-#   assume_role_policy = file("./templates/ecs/task-cd-role-policy.json")
-# }
+resource "aws_iam_role" "task-cd-role" {
+  name               = "${local.prefix}-task-cd-role"
+  assume_role_policy = file("./templates/ecs/task-cd-role-policy.json")
+}
 
-# resource "aws_iam_role_policy_attachment" "task_cd_role" {
-#   role       = aws_iam_role.task-cd-role.name
-#   policy_arn = aws_iam_policy.task_cd_role_policy.arn
-# }
+resource "aws_iam_role_policy_attachment" "task_cd_role" {
+  role       = aws_iam_role.task-cd-role.name
+  policy_arn = aws_iam_policy.task_cd_role_policy.arn
+}
 
 resource "aws_cloudwatch_log_group" "ecs_task_logs" {
   name = "${local.prefix}-api"
