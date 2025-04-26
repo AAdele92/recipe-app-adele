@@ -52,11 +52,11 @@ data "aws_iam_policy_document" "cd" {
 #########################
 
 
-resource "aws_iam_policy" "cd" {
-  name        = "${aws_iam_user.cd.name}-cd"
-  description = "Allow user to manage IAM resources."
-  policy      = data.aws_iam_policy_document.cd.json
-}
+# resource "aws_iam_policy" "cd" {
+#   name        = "${aws_iam_user.cd.name}-cd"
+#   description = "Allow user to manage IAM resources."
+#   policy      = data.aws_iam_policy_document.cd.json
+# }
 
 resource "aws_iam_user_policy_attachment" "iam" {
   user       = aws_iam_user.cd.name
