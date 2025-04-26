@@ -43,6 +43,7 @@ statement {
       "iam:CreatePolicy",
       "iam:AttachRolePolicy",
       "logs:CreateLogGroup",
+      "logs:ListTagsForResource",
       "ecs:CreateCluster",
       "rds:CreateDBSubnetGroup"
     ]
