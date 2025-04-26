@@ -11,21 +11,6 @@ data "aws_iam_policy_document" "cd" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:GetObject"
-    ]
-    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
-    
-  }
-}
-
-#########################
-# Policy for IAM access #
-#########################
-
-data "aws_iam_policy_document" "cd" {
-  statement {
-    effect = "Allow"
-    actions = [
       "iam:ListInstanceProfilesForRole",
       "iam:ListAttachedRolePolicies",
       "iam:DeleteRole",
@@ -51,13 +36,27 @@ data "aws_iam_policy_document" "cd" {
     ]
     resources = ["*"]
   }
+  
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    
+  }
 }
 
-# resource "aws_iam_policy" "cd" {
-#   name        = "${aws_iam_user.cd.name}-iam"
-#   description = "Allow user to manage IAM resources."
-#   policy      = data.aws_iam_policy_document.iam.json
-# }
+#########################
+# Policy for IAM access #
+#########################
+
+
+resource "aws_iam_policy" "cd" {
+  name        = "${aws_iam_user.cd.name}-cd"
+  description = "Allow user to manage IAM resources."
+  policy      = data.aws_iam_policy_document.cd.json
+}
 
 resource "aws_iam_user_policy_attachment" "iam" {
   user       = aws_iam_user.cd.name
