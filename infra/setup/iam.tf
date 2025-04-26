@@ -7,6 +7,10 @@ resource "aws_iam_user" "cd" {
   name = "recipe-app-api-cd"
 }
 
+resource "aws_iam_access_key" "cd" {
+  user = aws_iam_user.cd.name
+}
+
 data "aws_iam_policy_document" "cd" {
 statement {
     effect = "Allow"
@@ -14,7 +18,6 @@ statement {
       "s3:GetObject"
     ]
     resources = ["arn:aws:s3:::${var.bucket_name}/*"]
-    
   }
 
   statement {
@@ -46,7 +49,6 @@ statement {
     resources = ["*"]
   }
   
-  
 }
 
 #########################
@@ -76,9 +78,7 @@ resource "aws_iam_user_policy_attachment" "cd" {
   policy_arn = aws_iam_policy.cd.arn
 }
 
-resource "aws_iam_access_key" "cd" {
-  user = aws_iam_user.cd.name
-}
+
 
 #########################################################
 # Policy for Terraform backend to S3 and DynamoDB access #
