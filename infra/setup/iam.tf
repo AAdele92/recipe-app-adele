@@ -8,6 +8,15 @@ resource "aws_iam_user" "cd" {
 }
 
 data "aws_iam_policy_document" "cd" {
+statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    
+  }
+
   statement {
     effect = "Allow"
     actions = [
@@ -37,14 +46,7 @@ data "aws_iam_policy_document" "cd" {
     resources = ["*"]
   }
   
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:GetObject"
-    ]
-    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
-    
-  }
+  
 }
 
 #########################
